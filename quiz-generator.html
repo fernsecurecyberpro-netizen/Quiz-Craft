@@ -242,6 +242,21 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .header {
+                flex-wrap: wrap;
+                gap: 16px;
+                padding: 16px 0 24px;
+            }
+            .logo-text h1 {
+                font-size: 24px;
+            }
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
         .panel {
             background: var(--bg-card);
             border-radius: 24px;
@@ -991,7 +1006,7 @@ Answer: False</pre>
         function createCodeRain() {
             const codeRain = document.getElementById('codeRain');
             const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ{}[]<>/';
-            const columns = Math.floor(window.innerWidth / 20);
+            const columns = Math.min(Math.floor(window.innerWidth / 20), 30);
 
             for (let i = 0; i < columns; i++) {
                 const span = document.createElement('span');
@@ -1391,6 +1406,13 @@ Answer: False</pre>
             const resetBtn = document.getElementById('resetBtn');
 
             submitBtn.addEventListener('click', function() {
+                const answered = Object.keys(userAnswers).length;
+                const unanswered = quizData.length - answered;
+                if (unanswered > 0) {
+                    if (!confirm(`You have ${unanswered} unanswered question${unanswered !== 1 ? 's' : ''}. Submit anyway?`)) {
+                        return;
+                    }
+                }
                 stopTimer();
                 const results = document.getElementById('results');
                 const progressBar = document.getElementById('progressBar');
@@ -1577,7 +1599,7 @@ Answer: False</pre>
         function celebrate() {
             const colors = ['#00f5ff', '#7b2ff7', '#00ff88', '#ffa502'];
             
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 50; i++) {
                 setTimeout(function() {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
@@ -1586,10 +1608,7 @@ Answer: False</pre>
                     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                     confetti.style.animationDelay = Math.random() * 0.5 + 's';
                     document.body.appendChild(confetti);
-                    
-                    setTimeout(function() {
-                        confetti.remove();
-                    }, 3000);
+                    confetti.addEventListener('animationend', function() { confetti.remove(); });
                 }, i * 30);
             }
         }
