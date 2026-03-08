@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init)",
+      "Bash(git add quiz-generator.html .gitignore)",
+      "Bash(git commit:*)",
+      "Bash(git checkout -b develop)",
+      "Bash(git add quiz-generator.html)",
+      "Bash(git add REVIEW.md)",
+      "Bash(git mv /Users/michaelfernandezpc/Claude/Quiz-Generator/quiz-generator.html /Users/michaelfernandezpc/Claude/Quiz-Generator/index.html)",
+      "Bash(git add -A)"
+    ]
+  }
+}
