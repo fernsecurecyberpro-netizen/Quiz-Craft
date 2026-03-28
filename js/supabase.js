@@ -28,7 +28,8 @@ QuizCraft.db = (function() {
             headers: headers(),
             body: JSON.stringify({
                 title: title,
-                question_count: questionCount
+                question_count: questionCount,
+                user_id: QuizCraft.utils.getUserId()
             })
         })
         .then(function(res) {
@@ -59,7 +60,8 @@ QuizCraft.db = (function() {
                 total: total,
                 percentage: percentage,
                 grade: grade,
-                time_seconds: timeSeconds
+                time_seconds: timeSeconds,
+                user_id: QuizCraft.utils.getUserId()
             })
         })
         .then(function(res) {
@@ -81,7 +83,8 @@ QuizCraft.db = (function() {
     function getHistory(limit) {
         limit = limit || 10;
 
-        return fetch(SUPABASE_URL + '/rest/v1/quiz_results?select=id,score,total,percentage,grade,time_seconds,completed_at,quizzes(title,question_count)&order=completed_at.desc&limit=' + limit, {
+        var userId = QuizCraft.utils.getUserId();
+        return fetch(SUPABASE_URL + '/rest/v1/quiz_results?select=id,score,total,percentage,grade,time_seconds,completed_at,quizzes(title,question_count)&user_id=eq.' + encodeURIComponent(userId) + '&order=completed_at.desc&limit=' + limit, {
             method: 'GET',
             headers: headers()
         })

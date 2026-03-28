@@ -96,12 +96,27 @@ QuizCraft.utils = (function() {
         return matrix[b.length][a.length];
     }
 
+    /**
+     * Get or create a persistent anonymous user ID.
+     * Stored in localStorage so each browser has its own identity.
+     */
+    function getUserId() {
+        var key = 'quizcraft_user_id';
+        var id = safeGetItem(key, null);
+        if (!id) {
+            id = 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            safeSetItem(key, id);
+        }
+        return id;
+    }
+
     return {
         escapeHTML: escapeHTML,
         safeGetItem: safeGetItem,
         safeSetItem: safeSetItem,
         rateLimit: rateLimit,
         sanitizeFilename: sanitizeFilename,
-        levenshtein: levenshtein
+        levenshtein: levenshtein,
+        getUserId: getUserId
     };
 })();
