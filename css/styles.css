@@ -1136,15 +1136,24 @@ body.light-mode .rationale-label {
     border-radius: 12px;
     padding: 20px;
     margin-top: 20px;
-    font-size: 14px;
-    line-height: 1.8;
+    font-size: 13px;
+    line-height: 1.7;
     border: 1px solid var(--border-subtle);
+    max-height: 320px;
+    overflow-y: auto;
 }
 
 .sample-format h4 {
     color: var(--accent-primary);
     margin-bottom: 12px;
     font-family: 'Space Grotesk', sans-serif;
+    position: sticky;
+    top: -20px;
+    background: var(--bg-secondary);
+    padding: 8px 0;
+    margin: -8px 0 12px;
+    z-index: 1;
+    font-size: 14px;
 }
 
 .sample-format pre {
