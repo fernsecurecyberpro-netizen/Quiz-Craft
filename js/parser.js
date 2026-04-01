@@ -16,6 +16,7 @@ QuizCraft.parser = (function() {
         var lines = content.split('\n').map(function(line) { return line.trim(); }).filter(function(line) { return line; });
         var currentQuestion = null;
         var collectingOptions = false;
+        var collectingRationale = false;
 
         for (var i = 0; i < lines.length; i++) {
             if (state.quizData.length >= MAX_QUESTIONS) {
@@ -34,11 +35,13 @@ QuizCraft.parser = (function() {
                     type: 'multiple-choice',
                     options: [],
                     answer: '',
-                    rawAnswer: ''
+                    rawAnswer: '',
+                    rationale: ''
                 };
                 collectingOptions = true;
+                collectingRationale = false;
             }
-            else if (/^[a-d][\.\)]\s*.+/i.test(line) && currentQuestion && collectingOptions) {
+            else if (/^[a-e][\.\)]\s*.+/i.test(line) && currentQuestion && collectingOptions) {
                 currentQuestion.options.push(line);
             }
             else if (line.toLowerCase().startsWith('answer:')) {
@@ -71,6 +74,13 @@ QuizCraft.parser = (function() {
                     }
                 }
                 collectingOptions = false;
+            }
+            else if (line.toLowerCase().startsWith('rationale:') && currentQuestion) {
+                currentQuestion.rationale = line.substring(10).trim();
+                collectingRationale = true;
+            }
+            else if (collectingRationale && currentQuestion) {
+                currentQuestion.rationale += ' ' + line;
             }
         }
 

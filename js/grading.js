@@ -233,11 +233,21 @@ QuizCraft.grading = (function() {
                 isCorrect = userLower === correctLower;
             }
 
+            var rationaleHTML = '';
+            if (q.rationale) {
+                rationaleHTML =
+                    '<div class="rationale-callout">' +
+                        '<span class="rationale-label">Rationale</span>' +
+                        '<p>' + utils.escapeHTML(q.rationale) + '</p>' +
+                    '</div>';
+            }
+
             feedbackHTML +=
                 '<div class="feedback">' +
                     '<strong>Q' + (i + 1) + ': ' + utils.escapeHTML(q.question) + '</strong>' +
                     '<p style="margin-top: 8px;">Your answer: <span class="' + (isCorrect ? 'correct-answer' : 'incorrect-answer') + '">' + utils.escapeHTML(userAnswerText) + '</span></p>' +
                     (!isCorrect ? '<p style="margin-top: 4px;">Correct answer: <span class="correct-answer">' + utils.escapeHTML(correctAnswerText) + '</span></p>' : '<p style="margin-top: 4px; color: var(--success);">\u2713 Correct!</p>') +
+                    rationaleHTML +
                 '</div>';
         }
 
