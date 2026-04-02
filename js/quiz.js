@@ -31,7 +31,7 @@ QuizCraft.quiz = (function() {
                 for (var j = 0; j < q.options.length; j++) {
                     var letter = q.options[j].charAt(0).toLowerCase();
                     html += '<label class="option">';
-                    html += '<input type="radio" name="q' + i + '" value="' + letter + '" onchange="selectAnswer(' + i + ', \'' + letter + '\')" aria-label="' + utils.escapeHTML(q.options[j]) + '">';
+                    html += '<input type="radio" name="q' + i + '" value="' + letter + '" aria-label="' + utils.escapeHTML(q.options[j]) + '">';
                     html += '<span>' + utils.escapeHTML(q.options[j]) + '</span>';
                     html += '</label>';
                 }
@@ -42,7 +42,7 @@ QuizCraft.quiz = (function() {
                 for (var j = 0; j < q.options.length; j++) {
                     var letter = q.options[j].charAt(0).toLowerCase();
                     html += '<label class="option">';
-                    html += '<input type="checkbox" name="q' + i + '" value="' + letter + '" onchange="selectMultipleAnswers(' + i + ', \'' + letter + '\')" aria-label="' + utils.escapeHTML(q.options[j]) + '">';
+                    html += '<input type="checkbox" name="q' + i + '" value="' + letter + '" aria-label="' + utils.escapeHTML(q.options[j]) + '">';
                     html += '<span>' + utils.escapeHTML(q.options[j]) + '</span>';
                     html += '</label>';
                 }
@@ -50,16 +50,16 @@ QuizCraft.quiz = (function() {
             } else if (q.type === 'true-false') {
                 html += '<div role="radiogroup" aria-labelledby="' + qId + '">';
                 html += '<label class="option">';
-                html += '<input type="radio" name="q' + i + '" value="true" onchange="selectAnswer(' + i + ', \'true\')" aria-label="True">';
+                html += '<input type="radio" name="q' + i + '" value="true" aria-label="True">';
                 html += '<span>True</span>';
                 html += '</label>';
                 html += '<label class="option">';
-                html += '<input type="radio" name="q' + i + '" value="false" onchange="selectAnswer(' + i + ', \'false\')" aria-label="False">';
+                html += '<input type="radio" name="q' + i + '" value="false" aria-label="False">';
                 html += '<span>False</span>';
                 html += '</label>';
                 html += '</div>';
             } else {
-                html += '<input type="text" class="text-input" placeholder="Type your answer..." oninput="selectAnswer(' + i + ', this.value)" aria-labelledby="' + qId + '">';
+                html += '<input type="text" class="text-input" name="q' + i + '" placeholder="Type your answer..." aria-labelledby="' + qId + '">';
             }
 
             html += '</div>';
@@ -69,12 +69,46 @@ QuizCraft.quiz = (function() {
         quizArea.innerHTML = html;
         state.userAnswers = {};
 
+        // Bind event handlers (CSP blocks inline handlers)
+        bindEventHandlers();
+
         // Update question counter
         updateCounter();
         updateProgress();
 
         // Set up intersection observer for question tracking
         setupQuestionTracking();
+    }
+
+    function bindEventHandlers() {
+        for (var i = 0; i < state.quizData.length; i++) {
+            var q = state.quizData[i];
+            var inputs = document.querySelectorAll('input[name="q' + i + '"]');
+
+            if (q.type === 'multiple-choice' || q.type === 'true-false') {
+                for (var j = 0; j < inputs.length; j++) {
+                    (function(idx, input) {
+                        input.addEventListener('change', function() {
+                            selectAnswer(idx, input.value);
+                        });
+                    })(i, inputs[j]);
+                }
+            } else if (q.type === 'select-all') {
+                for (var j = 0; j < inputs.length; j++) {
+                    (function(idx, input) {
+                        input.addEventListener('change', function() {
+                            selectMultipleAnswers(idx, input.value);
+                        });
+                    })(i, inputs[j]);
+                }
+            } else if (q.type === 'short-answer') {
+                (function(idx, input) {
+                    input.addEventListener('input', function() {
+                        selectAnswer(idx, input.value);
+                    });
+                })(i, inputs[0]);
+            }
+        }
     }
 
     function setupQuestionTracking() {

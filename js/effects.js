@@ -148,9 +148,7 @@ QuizCraft.effects = (function() {
     };
 })();
 
-// --- Expose inline handler functions to global scope ---
-window.selectAnswer = QuizCraft.quiz.selectAnswer;
-window.selectMultipleAnswers = QuizCraft.quiz.selectMultipleAnswers;
+// --- Expose global handlers ---
 window.restoreUploadArea = QuizCraft.upload.restoreUploadArea;
 window.restoreUploadState = QuizCraft.upload.restoreUploadState;
 
