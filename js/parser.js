@@ -82,6 +82,9 @@ QuizCraft.parser = (function() {
             else if (collectingRationale && currentQuestion) {
                 currentQuestion.rationale += ' ' + line;
             }
+            else if (collectingOptions && currentQuestion && currentQuestion.options.length === 0) {
+                currentQuestion.question += ' ' + line;
+            }
         }
 
         if (currentQuestion && currentQuestion.answer !== '' && state.quizData.length < MAX_QUESTIONS) {
